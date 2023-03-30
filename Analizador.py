@@ -53,14 +53,19 @@ t_IGUALDAD = r'=='
 t_LLAVE_IZQUIERDA = r'{'
 t_LLAVE_DERECHA = r'}'
 
-#FUNCIONES PARA IDENTIFICAR IDENTIFICADORES, NUMEROS, COMENTARIOS, ESPACIOS EN BLANCO, SALTOS DE LINEA Y ERRORES
+#FUNCIONES PARA IDENTIFICAR IDENTIFICADORES, NUMEROS, COMENTARIOS, CADENAS, ESPACIOS EN BLANCO, SALTOS DE LINEA Y ERRORES
 def t_IDENTIFICADOR(t):
 	r'[a-zA-Z_][a-zA-Z0-9_]*'
 	if t.value.upper() in reservadas:
 		t.value = t.value.upper()
-		#reservadas.get(t.value,'ID')
 		t.type = t.value
+	return t
 
+def t_CADENA(t):
+	r'(\"(\s*|.*?)*\")'
+	if t.value.upper() in reservadas:
+		t.value = t.value.upper()
+		t.type = t.value
 	return t
 
 def t_NUEVALINEA(t):
@@ -71,7 +76,6 @@ def t_ESPACIOENBLANCO(t):
  r'\s+'
  pass
 
-#dsfjksdlgjklsdgjsdgslxcvjlk-,.
 def t_COMENTARIO(t):
 	r'\//.*'
 	pass
@@ -89,3 +93,19 @@ def t_NUMERO(t):
 def t_error(t):
 	print("caracter ilegal '%s'" % t.value[0])
 	t.lexer.skip(1)
+
+cadena = input('\n>>>')
+if '.ldd' in cadena:
+    directorio = 'C:/prueba/'
+    archivo = directorio + cadena
+    fp = codecs.open(archivo,"r","utf-8")
+    cadena = fp.read()
+    fp.close()
+
+analizador = lex.lex()
+analizador.input(cadena)
+
+while True:
+	tok = analizador.token()
+	if not tok : break
+	print(tok)
